@@ -7,6 +7,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.proalekse1.wetherapp7.databinding.ActivityMainBinding
+import org.json.JSONObject
 
 const val API_KEY = "1e0303fe33a14c4d9f0141630221411" //делаем из ключа с сайта константу
 class MainActivity : AppCompatActivity() {
@@ -31,7 +32,9 @@ class MainActivity : AppCompatActivity() {
             url, //url
             {
                     response->  //слушатель(в виде лямбды) который будет ждать результат который получим
-                        Log.d("MyLog", "Volley error: $response")
+                    val obj = JSONObject(response) //достаем json из ответа
+                    val temp = obj.getJSONObject("current") //достаем из json объект
+                        Log.d("MyLog", "Volley error: ${temp.getString("temp_c")}")
             },
             {
                     Log.d("MyLog", "Volley error: $it")            //слушатель ошибок
