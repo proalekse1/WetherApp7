@@ -7,9 +7,10 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.proalekse1.wetherapp7.databinding.ActivityMainBinding
+import com.proalekse1.wetherapp7.fragments.MainFragment
 import org.json.JSONObject
 
-const val API_KEY = "1e0303fe33a14c4d9f0141630221411" //делаем из ключа с сайта константу
+//const val API_KEY = "1e0303fe33a14c4d9f0141630221411" //делаем из ключа с сайта константу
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding //подключили байндинг
 
@@ -17,13 +18,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater) //подключили байндинг
         setContentView(binding.root)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.placeHolder, MainFragment.newInstance())
+            .commit() //подключили наш фрагмент
 
-        binding.bGet.setOnClickListener { //слушатель нажатий на кнопку get
+
+        /*binding.bGet.setOnClickListener { //слушатель нажатий на кнопку get
             getResult("Tula")
-        }
+        }*/
     }
 
-    private fun getResult(name: String){ //функция отправки и получения результата
+    /*private fun getResult(name: String){ //функция отправки и получения результата
         val url = "https://api.weatherapi.com/v1/current.json" +
         "?key=$API_KEY&q=$name&aqi=no" //url из сайта wether api
 
@@ -42,5 +48,5 @@ class MainActivity : AppCompatActivity() {
 
         )
         queue.add(stringRequest) //добавляем в очередь запрос
-    }
+    }*/
 }
