@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/LessonsAndroid/WetherApp/app/src/main/res/drawable/ic_search.xml" value="0.1685185185185185" />
+        <entry key="..\:/LessonsAndroid/WetherApp/app/src/main/res/drawable/ic_sync.xml" value="0.1685185185185185" />
         <entry key="..\:/LessonsAndroid/WetherApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/LessonsAndroid/WetherApp/app/src/main/res/layout/fragment_main.xml" value="0.25" />
+        <entry key="..\:/LessonsAndroid/WetherApp/app/src/main/res/layout/fragment_main.xml" value="0.30173775671406006" />
       </map>
     </option>
   </component>
