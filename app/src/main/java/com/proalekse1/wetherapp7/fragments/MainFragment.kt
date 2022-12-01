@@ -17,8 +17,11 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.tabs.TabLayoutMediator
 import com.proalekse1.wetherapp7.adapters.VpAdapter
+import com.proalekse1.wetherapp7.adapters.WeatherModel
 import com.proalekse1.wetherapp7.databinding.FragmentMainBinding
 import com.proalekse1.wetherapp7.isPermissionGranted
+import org.json.JSONObject
+
 const val API_KEY = "ee30c89e35434b60b29163436223011" //константа для api ключа
 
 class MainFragment : Fragment() {
@@ -84,13 +87,34 @@ class MainFragment : Fragment() {
             Request.Method.GET,
             url,
             {
-                result -> Log.d("MyLog", "Result: $result") //слушатель(в виде лямбды) который будет ждать результат который получим
+                result -> parseWeatherData(result) //слушатель(в виде лямбды) который будет ждать результат который получим
             },
             {
                error -> Log.d("MyLog", "Error: $error") //слушатель(в виде лямбды) который будет ждать результат который получим
             }
         )
         queue.add(request) //добавляем в очередь запрос
+    }
+
+    private fun parseWeatherData(result: String){ //парсинг json формата
+        val mainObject = JSONObject(result) //создаем из результата json объект
+        val item = WeatherModel(
+            mainObject.getJSONObject("location").getString("name"), //достали из JSON название города
+            mainObject.getJSONObject("current").getString("last_updated"), //достали из JSON время и дату
+            mainObject.getJSONObject("current")
+                .getJSONObject("condition").getString("text"), //достали из JSON condition(условия-солнечно)
+            mainObject.getJSONObject("current").getString("temp_c"), //достали из JSON температуру
+            "", //пока пусто
+            "",
+            mainObject.getJSONObject("current")
+                .getJSONObject("condition").getString("icon"), //достали из JSON condition(условия-солнечно) иконку
+            "" //пока пусто
+        )
+        Log.d("MyLog", "City: ${item.city}") //покажем в логе иныфу из даа класса
+        Log.d("MyLog", "Time: ${item.time}")
+        Log.d("MyLog", "Condition: ${item.condition}")
+        Log.d("MyLog", "Temp: ${item.currentTemp}")
+        Log.d("MyLog", "Url: ${item.imageUrl}")
     }
 
     companion object {
