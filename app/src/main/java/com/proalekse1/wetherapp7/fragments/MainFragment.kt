@@ -22,7 +22,7 @@ import com.proalekse1.wetherapp7.databinding.FragmentMainBinding
 import com.proalekse1.wetherapp7.isPermissionGranted
 import org.json.JSONObject
 
-const val API_KEY = "ee30c89e35434b60b29163436223011" //константа для api ключа
+const val API_KEY = "98fe852f80e345c4b9a73953220412" //константа для api ключа
 
 class MainFragment : Fragment() {
     private lateinit var pLauncher: ActivityResultLauncher<String> //для диалога и разрешений
@@ -96,25 +96,56 @@ class MainFragment : Fragment() {
         queue.add(request) //добавляем в очередь запрос
     }
 
-    private fun parseWeatherData(result: String){ //парсинг json формата
+    private fun parseWeatherData(result: String){ //основная функция парсинга
         val mainObject = JSONObject(result) //создаем из результата json объект
+        val list = parseDays(mainObject) // прогноз по дням
+        parseCurrentData(mainObject, list[0]) //погода на большой карточке с текущей погодой
+    }
+
+    private fun parseDays(mainObject: JSONObject): List<WeatherModel>{// парсим прогноз погоды по дням
+        val list = ArrayList<WeatherModel>() //создали список
+        val daysArray = mainObject.getJSONObject("forecast").getJSONArray("forecastday") //получаем массив из JSON
+        val name = mainObject.getJSONObject("location").getString("name") //достали из JSON название города
+        for (i in 0 until daysArray.length()){ //перебираем массив с 0 элемента до конца массива
+            val day = daysArray[i] as JSONObject
+            //начинаем заполнять WeatherModel
+            val item = WeatherModel(
+                name, //название города
+                day.getString("date"), //дата
+                day.getJSONObject("day").getJSONObject("condition")
+                    .getString("text"), //сосояние погоды
+                "",//нет текущей температуры потому что прогноз
+                day.getJSONObject("day").getString("maxtemp_c"), //максимальная температура
+                day.getJSONObject("day").getString("mintemp_c"), //минимальная температура
+                day.getJSONObject("day").getJSONObject("condition")
+                    .getString("icon"), //иконка сосояния погоды
+                day.getJSONArray("hour").toString() //прогноз погоды по часам получаем в виде стринга
+            )
+            list.add(item) //добавляем в список созданный item
+        }
+        return list //возвращаем список
+    }
+
+
+    private fun parseCurrentData(mainObject: JSONObject, weatherItem: WeatherModel){ //парсинг json формата для большой карточки
+
         val item = WeatherModel(
             mainObject.getJSONObject("location").getString("name"), //достали из JSON название города
             mainObject.getJSONObject("current").getString("last_updated"), //достали из JSON время и дату
             mainObject.getJSONObject("current")
                 .getJSONObject("condition").getString("text"), //достали из JSON condition(условия-солнечно)
             mainObject.getJSONObject("current").getString("temp_c"), //достали из JSON температуру
-            "", //пока пусто
-            "",
+            weatherItem.maxTemp, // максимальная температура
+            weatherItem.minTemp, // минимальная темепература
             mainObject.getJSONObject("current")
                 .getJSONObject("condition").getString("icon"), //достали из JSON condition(условия-солнечно) иконку
-            "" //пока пусто
+            weatherItem.hours //прогноз погоды по часам
         )
-        Log.d("MyLog", "City: ${item.city}") //покажем в логе иныфу из даа класса
-        Log.d("MyLog", "Time: ${item.time}")
-        Log.d("MyLog", "Condition: ${item.condition}")
-        Log.d("MyLog", "Temp: ${item.currentTemp}")
-        Log.d("MyLog", "Url: ${item.imageUrl}")
+        Log.d("MyLog", "City: ${item.maxTemp}") //покажем в логе иныфу из дата класса
+        Log.d("MyLog", "Time: ${item.minTemp}")
+        Log.d("MyLog", "Condition: ${item.hours}")
+
+
     }
 
     companion object {
