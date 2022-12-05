@@ -75,7 +75,7 @@ class MainFragment : Fragment() {
             tvMaxMin.text = maxMinTemp //минимальная и максимальная температура
 
             //передаем иконку через Picasso. Обязательно добавить "https"
-            Picasso.get().load("https" + it.imageUrl).into(imWeather)
+            Picasso.get().load("https:" + it.imageUrl).into(imWeather)
 
         }
     }
