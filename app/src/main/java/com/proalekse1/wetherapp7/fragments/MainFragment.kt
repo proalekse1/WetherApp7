@@ -12,14 +12,17 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.tabs.TabLayoutMediator
+import com.proalekse1.wetherapp7.MainViewModel
 import com.proalekse1.wetherapp7.adapters.VpAdapter
 import com.proalekse1.wetherapp7.adapters.WeatherModel
 import com.proalekse1.wetherapp7.databinding.FragmentMainBinding
 import com.proalekse1.wetherapp7.isPermissionGranted
+import com.squareup.picasso.Picasso
 import org.json.JSONObject
 
 const val API_KEY = "98fe852f80e345c4b9a73953220412" //константа для api ключа
@@ -35,6 +38,7 @@ class MainFragment : Fragment() {
         "Hours",
         "Days"
     )
+    private val model: MainViewModel by activityViewModels() //инициализируем MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +52,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         checkPermission() // диалог разрешений
         init() //VpAdapter for ViewPager на разметке
-        requestWeatherData("Tula")
+        updateCurrentCard() //обсервер
+        requestWeatherData("Tula") //функция отправки и получения результата по api
     }
 
     private fun init() = with(binding){ //VpAdapter for ViewPager на разметке
@@ -58,6 +63,21 @@ class MainFragment : Fragment() {
             tab, pos -> tab.text = tList[pos]
         }.attach()
 
+    }
+
+    private fun updateCurrentCard() = with(binding){ //следит за тем чтобы вью уже было создано и тогда можно передать данные во вью
+        model.liveDataCurrent.observe(viewLifecycleOwner){
+            val maxMinTemp = "${it.maxTemp}C°/${it.minTemp}C°" //переменная для максмин температуры
+            tvData.text = it.time //заполняем вьюшки Дата
+            tvCity.text = it.city //город
+            tvCurrentTemp.text = it.currentTemp //текущая погода
+            tvCondition.text = it.condition //состояние погоды
+            tvMaxMin.text = maxMinTemp //минимальная и максимальная температура
+
+            //передаем иконку через Picasso. Обязательно добавить "https"
+            Picasso.get().load("https" + it.imageUrl).into(imWeather)
+
+        }
     }
 
     private fun permissionListener(){ // диалог для разрешения
@@ -141,6 +161,8 @@ class MainFragment : Fragment() {
                 .getJSONObject("condition").getString("icon"), //достали из JSON condition(условия-солнечно) иконку
             weatherItem.hours //прогноз погоды по часам
         )
+
+        model.liveDataCurrent.value = item // передали из weatherModel в observer даннные
         Log.d("MyLog", "City: ${item.maxTemp}") //покажем в логе иныфу из дата класса
         Log.d("MyLog", "Time: ${item.minTemp}")
         Log.d("MyLog", "Condition: ${item.hours}")
