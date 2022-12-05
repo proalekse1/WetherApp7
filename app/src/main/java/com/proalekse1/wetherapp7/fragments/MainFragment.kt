@@ -76,7 +76,6 @@ class MainFragment : Fragment() {
 
             //передаем иконку через Picasso. Обязательно добавить "https"
             Picasso.get().load("https:" + it.imageUrl).into(imWeather)
-
         }
     }
 
