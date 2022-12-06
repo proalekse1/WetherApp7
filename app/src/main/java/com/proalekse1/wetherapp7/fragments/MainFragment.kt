@@ -67,7 +67,7 @@ class MainFragment : Fragment() {
 
     private fun updateCurrentCard() = with(binding){ //следит за тем чтобы вью уже было создано и тогда можно передать данные во вью
         model.liveDataCurrent.observe(viewLifecycleOwner){
-            val maxMinTemp = "${it.maxTemp}C°/${it.minTemp}C°" //переменная для максмин температуры
+            val maxMinTemp = "${it.maxTemp}°C/${it.minTemp}°C" //переменная для максмин температуры
             tvData.text = it.time //заполняем вьюшки Дата
             tvCity.text = it.city //город
             tvCurrentTemp.text = it.currentTemp //текущая погода
@@ -142,6 +142,7 @@ class MainFragment : Fragment() {
             )
             list.add(item) //добавляем в список созданный item
         }
+        model.liveDataList.value = list //передаем в майн вью модел
         return list //возвращаем список
     }
 

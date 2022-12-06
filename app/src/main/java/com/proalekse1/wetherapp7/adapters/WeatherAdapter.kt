@@ -17,7 +17,9 @@ class WeatherAdapter : ListAdapter<WeatherModel, WeatherAdapter.Holder>(Comparat
         fun bind(item: WeatherModel) = with(binding){ // как будем заполнять ресайклер вью
             tvDate.text = item.time //заполняем из дата класса каждый элемент размеки
             tvCondition.text = item.condition
-            tvTemp.text = item.currentTemp
+
+            //если пусто, то савим эти значения
+            tvTemp.text = item.currentTemp.ifEmpty { "${item.maxTemp}°C / ${item.minTemp}°C"}
             Picasso.get().load("https:" + item.imageUrl).into(im) //заполняем иконку
         }
     }
