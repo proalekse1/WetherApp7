@@ -1,4 +1,4 @@
-package com.proalekse1.wetherapp7.fragments
+package com.proalekse1.weatherapp7.fragments
 
 
 import android.Manifest
@@ -17,11 +17,11 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.tabs.TabLayoutMediator
-import com.proalekse1.wetherapp7.MainViewModel
-import com.proalekse1.wetherapp7.adapters.VpAdapter
-import com.proalekse1.wetherapp7.adapters.WeatherModel
+import com.proalekse1.weatherapp7.MainViewModel
+import com.proalekse1.weatherapp7.adapters.VpAdapter
+import com.proalekse1.weatherapp7.adapters.WeatherModel
 import com.proalekse1.wetherapp7.databinding.FragmentMainBinding
-import com.proalekse1.wetherapp7.isPermissionGranted
+import com.proalekse1.weatherapp7.isPermissionGranted
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 

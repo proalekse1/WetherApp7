@@ -1,4 +1,4 @@
-package com.proalekse1.wetherapp7.fragments
+package com.proalekse1.weatherapp7.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.proalekse1.wetherapp7.MainViewModel
+import com.proalekse1.weatherapp7.MainViewModel
 import com.proalekse1.wetherapp7.R
-import com.proalekse1.wetherapp7.adapters.WeatherAdapter
-import com.proalekse1.wetherapp7.adapters.WeatherModel
+import com.proalekse1.weatherapp7.adapters.WeatherAdapter
+import com.proalekse1.weatherapp7.adapters.WeatherModel
 import com.proalekse1.wetherapp7.databinding.FragmentHoursBinding
 import org.json.JSONArray
 import org.json.JSONObject

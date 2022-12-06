@@ -1,4 +1,4 @@
-package com.proalekse1.wetherapp7.adapters
+package com.proalekse1.weatherapp7.adapters
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,4 +1,4 @@
-package com.proalekse1.wetherapp7.adapters
+package com.proalekse1.weatherapp7.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

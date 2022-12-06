@@ -7,7 +7,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.proalekse1.wetherapp7"
+        applicationId "com.proalekse1.weatherapp7"
         minSdk 21
         targetSdk 31
         versionCode 1
