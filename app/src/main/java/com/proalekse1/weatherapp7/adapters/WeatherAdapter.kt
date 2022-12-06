@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.proalekse1.wetherapp7.R
-import com.proalekse1.wetherapp7.databinding.ListItemBinding
+import com.proalekse1.weatherapp7.R
+import com.proalekse1.weatherapp7.databinding.ListItemBinding
 import com.squareup.picasso.Picasso
 
 class WeatherAdapter : ListAdapter<WeatherModel, WeatherAdapter.Holder>(Comparator()) {

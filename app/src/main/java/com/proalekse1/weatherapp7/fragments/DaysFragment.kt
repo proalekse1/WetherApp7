@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.proalekse1.weatherapp7.MainViewModel
-import com.proalekse1.wetherapp7.R
 import com.proalekse1.weatherapp7.adapters.WeatherAdapter
-import com.proalekse1.wetherapp7.databinding.FragmentDaysBinding
+import com.proalekse1.weatherapp7.databinding.FragmentDaysBinding
 
 
 class DaysFragment : Fragment() {
@@ -33,9 +32,11 @@ class DaysFragment : Fragment() {
             adapter.submitList(it.subList(1, it.size)) //показываем  списке по дням от 1 позиции массива до последней,
                                                         //чтобы не повторять текущую дату
         }
+
     }
 
     private fun init() = with(binding){
+        adapter = WeatherAdapter() // подключаем к ресайклер вью наш адаптер
         rcView.layoutManager = LinearLayoutManager(activity) //инициаизируем ресайклер вью
         rcView.adapter = adapter // подключаем к ресайклер вью наш адаптер
     }

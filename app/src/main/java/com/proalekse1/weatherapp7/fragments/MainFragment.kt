@@ -20,7 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.proalekse1.weatherapp7.MainViewModel
 import com.proalekse1.weatherapp7.adapters.VpAdapter
 import com.proalekse1.weatherapp7.adapters.WeatherModel
-import com.proalekse1.wetherapp7.databinding.FragmentMainBinding
+import com.proalekse1.weatherapp7.databinding.FragmentMainBinding
 import com.proalekse1.weatherapp7.isPermissionGranted
 import com.squareup.picasso.Picasso
 import org.json.JSONObject

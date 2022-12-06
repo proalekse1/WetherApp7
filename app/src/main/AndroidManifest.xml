@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.proalekse1.wetherapp7">
+    package="com.proalekse1.weatherapp7">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WetherApp7"
+        android:theme="@style/Theme.WeatherApp7"
         android:usesCleartextTraffic="true">
         <activity
             android:name="com.proalekse1.weatherapp7.MainActivity"

@@ -5,6 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.proalekse1.weatherapp7.fragments.DaysFragment">
-
-
 </androidx.recyclerview.widget.RecyclerView>

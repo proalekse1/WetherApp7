@@ -2,14 +2,8 @@ package com.proalekse1.weatherapp7
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.proalekse1.wetherapp7.R
-import com.proalekse1.wetherapp7.databinding.ActivityMainBinding
+import com.proalekse1.weatherapp7.databinding.ActivityMainBinding
 import com.proalekse1.weatherapp7.fragments.MainFragment
-import org.json.JSONObject
 
 //const val API_KEY = "1e0303fe33a14c4d9f0141630221411" //делаем из ключа с сайта константу
 class MainActivity : AppCompatActivity() {

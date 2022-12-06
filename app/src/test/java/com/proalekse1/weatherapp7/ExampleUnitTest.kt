@@ -1,4 +1,4 @@
-package com.proalekse1.wetherapp7
+package com.proalekse1.weatherapp7
 
 import org.junit.Test
 
