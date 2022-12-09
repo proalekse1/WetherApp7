@@ -38,7 +38,7 @@ class HoursFragment : Fragment() {
 
     private fun initRcView() = with(binding){ //инициализируем адаптер
         rcView.layoutManager = LinearLayoutManager(activity) //указываем как хотим чтобы ресайклер вью показывался
-        adapter = WeatherAdapter()
+        adapter = WeatherAdapter(null)
         rcView.adapter = adapter
 
 

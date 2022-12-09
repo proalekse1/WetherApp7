@@ -9,10 +9,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.proalekse1.weatherapp7.MainViewModel
 import com.proalekse1.weatherapp7.adapters.WeatherAdapter
+import com.proalekse1.weatherapp7.adapters.WeatherModel
 import com.proalekse1.weatherapp7.databinding.FragmentDaysBinding
 
 
-class DaysFragment : Fragment() {
+class DaysFragment : Fragment(), WeatherAdapter.Listener {
     private lateinit var adapter: WeatherAdapter //Инициализируем WeatherAdapter
     private lateinit var binding: FragmentDaysBinding //подключили байндинг
     private val model: MainViewModel by activityViewModels() //передаем класс
@@ -36,7 +37,7 @@ class DaysFragment : Fragment() {
     }
 
     private fun init() = with(binding){
-        adapter = WeatherAdapter() // подключаем к ресайклер вью наш адаптер
+        adapter = WeatherAdapter(this@DaysFragment) // подключаем к ресайклер вью наш адаптер
         rcView.layoutManager = LinearLayoutManager(activity) //инициаизируем ресайклер вью
         rcView.adapter = adapter // подключаем к ресайклер вью наш адаптер
     }
@@ -46,5 +47,9 @@ class DaysFragment : Fragment() {
         @JvmStatic
         fun newInstance() =
             DaysFragment()
+    }
+
+    override fun onClick(item: WeatherModel) {
+        model.liveDataCurrent.value = item
     }
 }

@@ -70,9 +70,9 @@ class MainFragment : Fragment() {
             val maxMinTemp = "${it.maxTemp}°C/${it.minTemp}°C" //переменная для максмин температуры
             tvData.text = it.time //заполняем вьюшки Дата
             tvCity.text = it.city //город
-            tvCurrentTemp.text = it.currentTemp //текущая погода
+            tvCurrentTemp.text = it.currentTemp.ifEmpty { maxMinTemp } //текущая погода
             tvCondition.text = it.condition //состояние погоды
-            tvMaxMin.text = maxMinTemp //минимальная и максимальная температура
+            tvMaxMin.text = if (it.currentTemp.isEmpty()) "" else maxMinTemp//минимальная и максимальная температура
 
             //передаем иконку через Picasso. Обязательно добавить "https"
             Picasso.get().load("https:" + it.imageUrl).into(imWeather)
@@ -134,8 +134,8 @@ class MainFragment : Fragment() {
                 day.getJSONObject("day").getJSONObject("condition")
                     .getString("text"), //сосояние погоды
                 "",//нет текущей температуры потому что прогноз
-                day.getJSONObject("day").getString("maxtemp_c"), //максимальная температура
-                day.getJSONObject("day").getString("mintemp_c"), //минимальная температура
+                day.getJSONObject("day").getString("maxtemp_c").toFloat().toInt().toString(), //максимальная температура
+                day.getJSONObject("day").getString("mintemp_c").toFloat().toInt().toString(), //минимальная температура
                 day.getJSONObject("day").getJSONObject("condition")
                     .getString("icon"), //иконка сосояния погоды
                 day.getJSONArray("hour").toString() //прогноз погоды по часам получаем в виде стринга
