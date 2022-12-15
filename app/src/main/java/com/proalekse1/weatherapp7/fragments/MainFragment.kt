@@ -2,7 +2,12 @@ package com.proalekse1.weatherapp7.fragments
 
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,12 +16,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.tabs.TabLayoutMediator
+import com.proalekse1.weatherapp7.DialogManager
 import com.proalekse1.weatherapp7.MainViewModel
 import com.proalekse1.weatherapp7.adapters.VpAdapter
 import com.proalekse1.weatherapp7.adapters.WeatherModel
@@ -28,6 +40,7 @@ import org.json.JSONObject
 const val API_KEY = "98fe852f80e345c4b9a73953220412" //константа для api ключа
 
 class MainFragment : Fragment() {
+    private lateinit var fLocationClient: FusedLocationProviderClient // для получения местоположения
     private lateinit var pLauncher: ActivityResultLauncher<String> //для диалога и разрешений
     private lateinit var binding: FragmentMainBinding//подключаем байндинг
     private val fList = listOf( //для списка ViewPager
@@ -53,16 +66,65 @@ class MainFragment : Fragment() {
         checkPermission() // диалог разрешений
         init() //VpAdapter for ViewPager на разметке
         updateCurrentCard() //обсервер
-        requestWeatherData("Tula") //функция отправки и получения результата по api
+        getLocation() // получаем местоположение автоматом
+        // requestWeatherData("Tula") указывали город вручную, функция отправки и получения результата по api
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkLocation()
     }
 
     private fun init() = with(binding){ //VpAdapter for ViewPager на разметке
+        fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext()) //для получения местоположения
         val adapter = VpAdapter(activity as FragmentActivity, fList)
         vp.adapter = adapter //vp-view pager в разметке
         TabLayoutMediator(tabLayout, vp){ // связываем tabLayout с ViewPager
             tab, pos -> tab.text = tList[pos]
         }.attach()
+        ibSync.setOnClickListener { //слушатель на кнопку местоположения
+            tabLayout.selectTab(tabLayout.getTabAt(0)) //по нажатию на кнопку мест-ния перебрасывает на погоду по часам
+            checkLocation()
+        }
+    }
 
+    private fun checkLocation(){
+        if (isLocationEnabled()){
+            getLocation()
+        } else {
+            DialogManager.locationSettingsDialog(requireContext(), object : DialogManager.Listener{
+                override fun onClick() {
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }
+            })
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean{
+        val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun getLocation(){ //функция получения местоположения
+        if(!isLocationEnabled()){
+            Toast.makeText(requireContext(), "GPS disabled!", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val ct = CancellationTokenSource()// токен запроса
+        if (ActivityCompat.checkSelfPermission( //проверка дал ли пользователь разрешение
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, ct.token) //сам запрос
+        .addOnCompleteListener{ //слушатель запроса
+            requestWeatherData("${it.result.latitude},${it.result.latitude}") //получаем широту и долготу
+        }
     }
 
     private fun updateCurrentCard() = with(binding){ //следит за тем чтобы вью уже было создано и тогда можно передать данные во вью
