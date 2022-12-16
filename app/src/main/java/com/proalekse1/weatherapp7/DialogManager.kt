@@ -3,24 +3,23 @@ package com.proalekse1.weatherapp7
 import android.app.AlertDialog
 import android.content.Context
 
-object DialogManager { //класс для диалога включен GPS или нет
+object DialogManager {
     fun locationSettingsDialog(context: Context, listener: Listener){
         val builder = AlertDialog.Builder(context)
-        val dialog = builder.create() // создаем диалог
-        dialog.setTitle("Enable location?") //заголовок
-        dialog.setMessage("GPS disable, do you want enable location?") //сообщение
-        //позитивная кнопка
-        listener.onClick()
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK"){ _,_ -> //_,_ -> чтобы не пользоваться сандартными переменными
-            dialog.dismiss() //закрыть диалог
+        val dialog = builder.create()
+        dialog.setTitle("Enable location?")
+        dialog.setMessage("GPS disabled")
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK"){_,_ ->
+            listener.onClick()
+            dialog.dismiss()
         }
-        //негативная кнопка
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel"){ _,_ -> //_,_ -> чтобы не пользоваться сандартными переменными
-            dialog.dismiss() //закрыть диалог
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL"){_,_ ->
+            dialog.dismiss()
         }
         dialog.show()
     }
-    interface Listener { //интерфейс для передачи в MainFragment
+
+    interface Listener{
         fun onClick()
     }
 }

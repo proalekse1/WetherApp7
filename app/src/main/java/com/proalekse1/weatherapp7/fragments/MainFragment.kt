@@ -23,8 +23,9 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
+
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.tabs.TabLayoutMediator
 import com.proalekse1.weatherapp7.DialogManager
@@ -40,6 +41,8 @@ const val API_KEY = "98fe852f80e345c4b9a73953220412" //константа для
 
 class MainFragment : Fragment() {
     private lateinit var fLocationClient: FusedLocationProviderClient // для получения местоположения
+    private lateinit var pLauncher: ActivityResultLauncher<String> //для диалога и разрешений
+    private lateinit var binding: FragmentMainBinding//подключаем байндинг
     private val fList = listOf( //для списка ViewPager
         HoursFragment.newInstance(),
         DaysFragment.newInstance()
@@ -48,8 +51,6 @@ class MainFragment : Fragment() {
         "Hours",
         "Days"
     )
-    private lateinit var pLauncher: ActivityResultLauncher<String> //для диалога и разрешений
-    private lateinit var binding: FragmentMainBinding//подключаем байндинг
     private val model: MainViewModel by activityViewModels() //инициализируем MainViewModel
 
     override fun onCreateView(
@@ -65,12 +66,11 @@ class MainFragment : Fragment() {
         checkPermission() // диалог разрешений
         init() //VpAdapter for ViewPager на разметке
         updateCurrentCard() //обсервер
-        //getlocation() // получаем местоположение автоматом
+        getLocation() // получаем местоположение автоматом
         // requestWeatherData("Tula") указывали город вручную, функция отправки и получения результата по api
-
     }
 
-    override fun onResume() { //цикл когда мы просто вернулись в приложение не закрывая его
+    override fun onResume() {
         super.onResume()
         checkLocation()
     }
@@ -84,33 +84,32 @@ class MainFragment : Fragment() {
         }.attach()
         ibSync.setOnClickListener { //слушатель на кнопку местоположения
             tabLayout.selectTab(tabLayout.getTabAt(0)) //по нажатию на кнопку мест-ния перебрасывает на погоду по часам
-            checkLocation() //функция для запуска диалога проверки GPS
+            checkLocation()
         }
     }
 
-    private fun checkLocation(){//функция для запуска диалога проверки GPS
-        if(isLocationEnabled()){ //если GPS есть, получи координаты
-            getlocation()
-        } else { //если GPS нет, открыть диалог
-            DialogManager.locationSettingsDialog(requireActivity(), object : DialogManager.Listener{
+    private fun checkLocation(){
+        if (isLocationEnabled()){
+            getLocation()
+        } else {
+            DialogManager.locationSettingsDialog(requireContext(), object : DialogManager.Listener{
                 override fun onClick() {
-                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) //открываем настройки GPS
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
             })
         }
     }
 
-    private fun isLocationEnabled(): Boolean{ //функция которая проверяет включен GPS или нет
+    private fun isLocationEnabled(): Boolean{
         val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
-    private fun getlocation(){ //функция получения местоположения
-        //простой вариант если нет диалога через тост предупредить пользователя
-        /*if (!isLocationEnabled()){ //проверяет включен GPS или нет
-            Toast.makeText(requireContext(), "Location disabled!", Toast.LENGTH_SHORT).show()
+    private fun getLocation(){ //функция получения местоположения
+        if(!isLocationEnabled()){
+            Toast.makeText(requireContext(), "GPS disabled!", Toast.LENGTH_SHORT).show()
             return
-        }*/
+        }
         val ct = CancellationTokenSource()// токен запроса
         if (ActivityCompat.checkSelfPermission( //проверка дал ли пользователь разрешение
                 requireContext(),
@@ -122,7 +121,7 @@ class MainFragment : Fragment() {
         ) {
             return
         }
-        fLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, ct.token) //сам запрос
+        fLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, ct.token) //сам запрос
         .addOnCompleteListener{ //слушатель запроса
             requestWeatherData("${it.result.latitude},${it.result.latitude}") //получаем широту и долготу
         }
