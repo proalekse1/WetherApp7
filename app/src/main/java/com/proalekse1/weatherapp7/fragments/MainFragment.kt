@@ -86,6 +86,16 @@ class MainFragment : Fragment() {
             tabLayout.selectTab(tabLayout.getTabAt(0)) //по нажатию на кнопку мест-ния перебрасывает на погоду по часам
             checkLocation()
         }
+        ibSearch.setOnClickListener { //слушатель на кнопку поиска местоположения
+            DialogManager.searchByNameDialog(requireContext(), object : DialogManager.Listener{
+                override fun onClick(name: String?) {
+                    if (name != null) { //проверка на null
+                        requestWeatherData(name)
+                    }
+                    // Log.d("MyLog", "Name: $name") //для проверки
+                }
+            })
+        }
     }
 
     private fun checkLocation(){ //функция для запуска диалога проверки GPS
@@ -93,7 +103,7 @@ class MainFragment : Fragment() {
             getLocation()
         } else { //если GPS нет, открыть диалог
             DialogManager.locationSettingsDialog(requireContext(), object : DialogManager.Listener{
-                override fun onClick() {
+                override fun onClick(name: String?) {
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) //открываем настройки GPS
                 }
             })
@@ -123,7 +133,7 @@ class MainFragment : Fragment() {
         }
         fLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, ct.token) //сам запрос
         .addOnCompleteListener{ //слушатель запроса
-            requestWeatherData("${it.result.latitude},${it.result.latitude}") //получаем широту и долготу
+            requestWeatherData("${it.result.latitude},${it.result.longitude}") //получаем широту и долготу
         }
     }
 
