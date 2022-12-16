@@ -66,7 +66,7 @@ class MainFragment : Fragment() {
         checkPermission() // диалог разрешений
         init() //VpAdapter for ViewPager на разметке
         updateCurrentCard() //обсервер
-        getLocation() // получаем местоположение автоматом
+        //getLocation() // получаем местоположение автоматом
         // requestWeatherData("Tula") указывали город вручную, функция отправки и получения результата по api
     }
 
@@ -88,28 +88,28 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun checkLocation(){
-        if (isLocationEnabled()){
+    private fun checkLocation(){ //функция для запуска диалога проверки GPS
+        if (isLocationEnabled()){ //если GPS есть, получи координаты
             getLocation()
-        } else {
+        } else { //если GPS нет, открыть диалог
             DialogManager.locationSettingsDialog(requireContext(), object : DialogManager.Listener{
                 override fun onClick() {
-                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) //открываем настройки GPS
                 }
             })
         }
     }
 
-    private fun isLocationEnabled(): Boolean{
+    private fun isLocationEnabled(): Boolean{ //функция которая проверяет включен GPS или нет
         val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
     private fun getLocation(){ //функция получения местоположения
-        if(!isLocationEnabled()){
+        /*if(!isLocationEnabled()){ //проверяет включен GPS или нет
             Toast.makeText(requireContext(), "GPS disabled!", Toast.LENGTH_SHORT).show()
             return
-        }
+        }*/
         val ct = CancellationTokenSource()// токен запроса
         if (ActivityCompat.checkSelfPermission( //проверка дал ли пользователь разрешение
                 requireContext(),
